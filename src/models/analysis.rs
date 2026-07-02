@@ -1053,3 +1053,15 @@ pub struct GetCalendarResponse {
     pub data: Vec<GetCalendarResponseDataItem>,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug, Default, PartialEq)]
+pub struct OrderQueueResponseItem {
+    pub time: String,
+    pub order_id: String,
+    pub order_volume: i64,
+    pub open_volume: i64,
+    pub done_volume: i64,
+    pub order_value: i64,
+    pub open_value: i64,
+    pub done_value: i64,
+}
+

@@ -3040,4 +3040,52 @@ impl AnalysisApi {
         self.client.request(reqwest::Method::GET, &path, &query, None::<&()>).await
     }
 
+
+    /// Mendapatkan antrian order (order tracking) untuk saham pada harga, sisi, halaman, dan limit tertentu.
+    /// 
+    ///     Fitur:
+    ///     - Realtime order queue tracking dari third-party API.
+    ///     - Menampilkan detail antrian order: waktu order, ID order, volume order, volume yang masih open (outstanding), volume yang sudah done (terisi), nilai order (order_value), nilai yang masih open (open_value), dan nilai yang sudah done (done_value).
+    ///     - Dukungan fallback ke penyedia data alternatif saat terjadi gangguan.
+    ///     - Caching otomatis di luar jam perdagangan bursa.
+    /// 
+    ///     Jenis Data: Real-time
+    /// 
+    ///     Update: Real-time selama jam perdagangan
+    /// 
+    ///     Contoh Penggunaan:
+    ///     - Melacak antrian antrean order pada level harga tertentu
+    ///     - Analisis distribusi antrean bid/offer secara detail
+    ///     - Mengidentifikasi order besar (institutional order) dalam antrean
+    /// 
+    ///     ---
+    ///     [English]
+    /// 
+    ///     Get order queue (order tracking) for a stock at a specific price, side, page, and limit.
+    /// 
+    ///     Features:
+    ///     - Real-time order queue tracking from third-party APIs.
+    ///     - Displays detailed order queue: order time, order ID, order volume, open volume (outstanding), completed volume (done), order value (order_value), open value (open_value), and completed value (done_value).
+    ///     - Alternative data provider fallback support during outages.
+    ///     - Automatic caching outside trading hours.
+    /// 
+    ///     Data Type: Real-time
+    /// 
+    ///     Update: Real-time during trading hours
+    /// 
+    ///     Usage Examples:
+    ///     - Track order queue at a specific price level
+    ///     - Detailed bid/offer queue distribution analysis
+    ///     - Identify large orders (institutional orders) in the queue
+    pub async fn get_order_queue(&self, code: &str, price: &str, side: &str, page: Option<&str>, limit: Option<&str>) -> Result<Vec<OrderQueueResponseItem>, crate::error::InvezgoError> {
+        let path = format!("/analysis/queue/{}", code);
+        let query = [
+            ("price", Some(price.to_string())),
+            ("side", Some(side.to_string())),
+            ("page", page.map(|v| v.to_string())),
+            ("limit", limit.map(|v| v.to_string())),
+        ];
+        self.client.request(reqwest::Method::GET, &path, &query, None::<&()>).await
+    }
+
 }
